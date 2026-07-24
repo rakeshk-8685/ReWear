@@ -6,7 +6,7 @@ services:
     name: rewear-api
     env: node
     plan: free
-    buildCommand: cd backend && npm install && npm run build
+    buildCommand: cd backend && npm install --legacy-peer-deps && npm run build
     startCommand: cd backend && npm start
     healthCheckPath: /health
     envVars:
@@ -38,7 +38,7 @@ services:
   - type: web
     name: rewear-web
     env: static
-    buildCommand: cd frontend && npm install && npm run build
+    buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build
     staticPublishPath: ./frontend/dist/frontend/browser
     routes:
       - type: rewrite
