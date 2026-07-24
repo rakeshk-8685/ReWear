@@ -10,6 +10,7 @@ export interface ISwapRequest extends Document {
   offeredItems: Types.ObjectId[];
   status: SwapStatus;
   message?: string;
+  deliveryMethod?: 'COURIER' | 'DROP_OFF' | 'HANDSHAKE';
   shippingInfo?: {
     requesterTrackingNumber?: string;
     requesterCarrier?: string;
@@ -17,6 +18,13 @@ export interface ISwapRequest extends Document {
     receiverTrackingNumber?: string;
     receiverCarrier?: string;
     receiverShippedAt?: Date;
+  };
+  dispute?: {
+    isDisputed: boolean;
+    reason?: string;
+    status?: 'OPEN' | 'RESOLVED' | 'DISMISSED';
+    filedBy?: Types.ObjectId;
+    createdAt?: Date;
   };
   completedAt?: Date;
   createdAt: Date;
@@ -35,6 +43,11 @@ const swapRequestSchema = new Schema<ISwapRequest>(
       default: 'PENDING',
     },
     message: { type: String, default: 'Hey! I would love to trade items with you.' },
+    deliveryMethod: {
+      type: String,
+      enum: ['COURIER', 'DROP_OFF', 'HANDSHAKE'],
+      default: 'COURIER',
+    },
     shippingInfo: {
       requesterTrackingNumber: String,
       requesterCarrier: String,
@@ -42,6 +55,13 @@ const swapRequestSchema = new Schema<ISwapRequest>(
       receiverTrackingNumber: String,
       receiverCarrier: String,
       receiverShippedAt: Date,
+    },
+    dispute: {
+      isDisputed: { type: Boolean, default: false },
+      reason: String,
+      status: { type: String, enum: ['OPEN', 'RESOLVED', 'DISMISSED'], default: 'OPEN' },
+      filedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+      createdAt: Date,
     },
     completedAt: Date,
   },

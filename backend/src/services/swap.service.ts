@@ -146,6 +146,30 @@ export class SwapService {
 
     return swapRepository.updateShippingInfo(swapId, currentShipping);
   }
+
+  async fileDispute(swapId: string, userId: string, reason: string) {
+    const swap = await swapRepository.findById(swapId);
+    if (!swap) {
+      throw ApiError.notFound('Swap request not found.');
+    }
+
+    const isParticipant =
+      swap.requester._id.toString() === userId || swap.receiver._id.toString() === userId;
+
+    if (!isParticipant) {
+      throw ApiError.forbidden('You are not authorized to file a dispute for this swap.');
+    }
+
+    swap.dispute = {
+      isDisputed: true,
+      reason,
+      status: 'OPEN',
+      filedBy: userId as any,
+      createdAt: new Date(),
+    };
+
+    return swap.save();
+  }
 }
 
 export const swapService = new SwapService();

@@ -1,13 +1,16 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { SwapRequest, SwapStatus } from '../../../core/models/swap.model';
 import { DEFAULT_ITEM_IMAGE, DEFAULT_USER_AVATAR } from '../../../core/services/item.service';
+import { ShippingModalComponent } from '../shipping-modal/shipping-modal.component';
+import { SwapService } from '../../../core/services/swap.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-swap-card',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ShippingModalComponent],
   template: `
     <div class="glass-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-6 shadow-xl relative">
       
@@ -166,20 +169,46 @@ import { DEFAULT_ITEM_IMAGE, DEFAULT_USER_AVATAR } from '../../../core/services/
           }
 
           @if (swap?.status === 'ACCEPTED') {
-            <button
-              (click)="updateStatus('COMPLETED')"
-              class="px-5 py-2 rounded-full bg-emerald-500 text-white text-xs font-extrabold shadow-md hover:bg-emerald-600"
-            >
-              Mark Swap Completed & Rate Partner
-            </button>
+            <div class="flex flex-wrap items-center gap-2">
+              <button
+                (click)="isShippingModalOpen.set(true)"
+                class="px-4 py-2 rounded-full bg-blue-500/10 text-blue-500 text-xs font-bold hover:bg-blue-500/20 border border-blue-500/20 flex items-center gap-1"
+              >
+                <span>📦 Shipping Logistics</span>
+              </button>
+              <button
+                (click)="reportDispute()"
+                class="px-3 py-2 rounded-full bg-amber-500/10 text-amber-500 text-xs font-bold hover:bg-amber-500/20 border border-amber-500/20"
+              >
+                ⚠️ Dispute
+              </button>
+              <button
+                (click)="updateStatus('COMPLETED')"
+                class="px-5 py-2 rounded-full bg-emerald-500 text-white text-xs font-extrabold shadow-md hover:bg-emerald-600"
+              >
+                Complete Swap
+              </button>
+            </div>
           }
         </div>
       </div>
+
+      <!-- Digital Shipping Modal -->
+      <app-shipping-modal
+        [isOpen]="isShippingModalOpen()"
+        [swap]="swap"
+        (modalClosed)="isShippingModalOpen.set(false)"
+        (shippingUpdated)="onShippingUpdated()"
+      ></app-shipping-modal>
 
     </div>
   `,
 })
 export class SwapCardComponent {
+  private swapService = inject(SwapService);
+  private notification = inject(NotificationService);
+
+  isShippingModalOpen = signal<boolean>(false);
   @Input({ required: true }) swap!: SwapRequest;
   @Input() currentUserId?: string;
 
@@ -229,5 +258,24 @@ export class SwapCardComponent {
     if (this.swap?._id) {
       this.statusChanged.emit({ id: this.swap._id, status });
     }
+  }
+
+  onShippingUpdated(): void {
+    if (this.swap?._id) {
+      this.statusChanged.emit({ id: this.swap._id, status: this.swap.status });
+    }
+  }
+
+  reportDispute(): void {
+    const reason = prompt('Please describe the dispute reason (e.g. condition mismatch or delayed shipment):');
+    if (!reason || !this.swap?._id) return;
+
+    this.swapService.fileDispute(this.swap._id, reason).subscribe({
+      next: () => {
+        this.notification.warning('Dispute Reported', 'Trade dispute reported to moderation queue.');
+        this.onShippingUpdated();
+      },
+      error: (err) => this.notification.error('Error', err.error?.message || 'Failed to submit dispute'),
+    });
   }
 }

@@ -122,6 +122,46 @@ import { FormsModule } from '@angular/forms';
         </div>
       </div>
 
+      <!-- City Swapper Eco Leaderboard -->
+      <div class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white">🏆 City Swapper Eco Leaderboard</h3>
+          <span class="text-xs font-bold text-emerald-500">Live Ranking Updates</span>
+        </div>
+
+        <div class="glass-card rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xl">
+          <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/50">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Swapper & Location</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Swaps & Impact</span>
+          </div>
+
+          <div class="divide-y divide-slate-100 dark:divide-slate-800">
+            @for (swapper of cityLeaderboard; track swapper.rank) {
+              <div class="p-4 sm:p-5 flex items-center justify-between hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <div class="flex items-center space-x-4">
+                  <span class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-black text-xs text-slate-900 dark:text-white">
+                    #{{ swapper.rank }}
+                  </span>
+                  <img [src]="swapper.avatar" class="w-10 h-10 rounded-full object-cover border border-emerald-500/30" />
+                  <div>
+                    <h4 class="text-xs font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      <span>{{ swapper.name }}</span>
+                      <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[9px] font-bold">{{ swapper.badge }}</span>
+                    </h4>
+                    <p class="text-[10px] text-slate-400">📍 {{ swapper.city }} • Verified Swapper</p>
+                  </div>
+                </div>
+
+                <div class="text-right">
+                  <span class="block text-sm font-black text-emerald-500">{{ swapper.swapsCount }} Swaps</span>
+                  <span class="text-[10px] font-bold text-slate-400">{{ swapper.co2Saved }} kg CO₂ Saved</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
       <!-- Eco Tips Grid -->
       <div class="space-y-6">
         <h3 class="text-xl font-bold text-slate-900 dark:text-white">Sustainable Wardrobe Habits</h3>
@@ -174,6 +214,13 @@ export class SustainabilityDashboardComponent implements OnInit {
     { icon: '👕', name: 'Textile Rescuer', desc: 'Rescued 15+ pre-loved garments' },
     { icon: '💧', name: 'Water Guardian', desc: 'Saved 30,000+ L freshwater' },
     { icon: '🌲', name: 'Forest Protector', desc: 'Planted 5+ tree equivalences' },
+  ];
+
+  cityLeaderboard = [
+    { rank: 1, name: 'Ananya Sharma', city: 'Indiranagar, Bangalore', swapsCount: 42, co2Saved: 525, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400', badge: '🛡️ Eco Icon' },
+    { rank: 2, name: 'Rohan Mehta', city: 'Bandra, Mumbai', swapsCount: 38, co2Saved: 475, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400', badge: '⚡ Fast Dispatch' },
+    { rank: 3, name: 'Priya Verma', city: 'Connaught Place, Delhi', swapsCount: 29, co2Saved: 362, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400', badge: '🌟 Top Trader' },
+    { rank: 4, name: 'Karan Patel', city: 'Sector 18, Noida', swapsCount: 24, co2Saved: 300, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400', badge: '🌱 Eco Champion' },
   ];
 
   get calculatedCo2(): number {

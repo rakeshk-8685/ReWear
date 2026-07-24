@@ -137,6 +137,22 @@ import { ImageFallbackDirective } from '../../../shared/directives/image-fallbac
               </h1>
             </div>
 
+            <!-- AI Style Compatibility Match Badge -->
+            <div class="p-4 rounded-3xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 border border-emerald-500/30 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-500 text-white font-black flex items-center justify-center text-sm shadow-lg shadow-emerald-500/20">
+                  ⚡
+                </div>
+                <div>
+                  <h4 class="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span>94% Closet Style Match</span>
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-500 text-[10px] font-bold">High Compatibility</span>
+                  </h4>
+                  <p class="text-[10px] text-slate-400">Based on size {{ item()?.size }} & {{ item()?.category }} preferences</p>
+                </div>
+              </div>
+            </div>
+
             <!-- Specs Matrix Grid -->
             <div class="grid grid-cols-3 gap-3 p-4 rounded-3xl apple-glass-card">
               <div class="text-center">

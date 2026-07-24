@@ -225,7 +225,12 @@ import { Item } from '../../../core/models/item.model';
           </div>
 
           <div>
-            <label for="itemDescription" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Description</label>
+            <div class="flex items-center justify-between mb-1">
+              <label for="itemDescription" class="block text-xs font-bold uppercase tracking-wider text-slate-400">Description</label>
+              <button type="button" (click)="generateAIDescription()" class="text-[10px] font-bold text-emerald-500 hover:underline">
+                🤖 Auto-Generate AI Tags & Bio
+              </button>
+            </div>
             <textarea
               id="itemDescription"
               name="description"
@@ -378,6 +383,19 @@ export class ItemCreateComponent implements OnInit {
     const estimated = Math.round(base * multiplier + brandBonus);
     this.itemForm.patchValue({ valueEstimate: estimated });
     this.notification.info('Value Estimated', `Calculated ~$${estimated} based on ${category}, ${condition}, and brand level.`);
+  }
+
+  generateAIDescription(): void {
+    const title = this.itemForm.get('title')?.value || 'Vintage Garment';
+    const category = this.itemForm.get('category')?.value || 'Outerwear';
+    const brand = this.itemForm.get('brand')?.value || 'Pre-Loved';
+    const condition = this.itemForm.get('condition')?.value || 'Like New';
+    const material = this.itemForm.get('material')?.value || 'Quality Fabric';
+
+    const aiBio = `Authentic ${brand} ${title} in ${condition} condition. Crafted with ${material}, tailored for a comfortable fit. Perfect addition for sustainable fashion enthusiasts looking to trade unique closet pieces. #${category.replace(/\s+/g, '')} #${brand.replace(/\s+/g, '')} #EcoSwap #ReWearStyle`;
+
+    this.itemForm.patchValue({ description: aiBio });
+    this.notification.success('AI Generated Bio', 'AI description and hashtags created.');
   }
 
   private fetchExistingItem(id: string): void {

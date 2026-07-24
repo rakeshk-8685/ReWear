@@ -61,6 +61,16 @@ export class SwapController {
       next(error);
     }
   }
+
+  async fileDispute(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { reason } = req.body;
+      const swap = await swapService.fileDispute(req.params.id, req.user!.userId, reason || 'Trade dispute filed by swapper.');
+      ApiResponse.success(res, 'Trade dispute filed successfully', swap);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const swapController = new SwapController();

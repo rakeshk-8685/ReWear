@@ -29,4 +29,8 @@ export class SwapService {
   updateShippingInfo(id: string, data: { carrier: string; trackingNumber: string }): Observable<ApiResponse<SwapRequest>> {
     return this.api.patch<SwapRequest>(`/swaps/${id}/shipping`, data);
   }
+
+  fileDispute(id: string, reason: string): Observable<ApiResponse<SwapRequest>> {
+    return this.api.post<SwapRequest>(`/swaps/${id}/dispute`, { reason });
+  }
 }

@@ -11,5 +11,6 @@ router.get('/my-swaps', (req, res, next) => swapController.getUserSwaps(req, res
 router.get('/:id', (req, res, next) => swapController.getSwapById(req, res, next));
 router.patch('/:id/status', (req, res, next) => swapController.updateSwapStatus(req, res, next));
 router.patch('/:id/shipping', (req, res, next) => swapController.updateShippingInfo(req, res, next));
+router.post('/:id/dispute', (req, res, next) => swapController.fileDispute(req, res, next));
 
 export default router;
