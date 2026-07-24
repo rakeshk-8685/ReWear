@@ -207,7 +207,12 @@ import { Item } from '../../../core/models/item.model';
             </div>
 
             <div>
-              <label for="itemValueEstimate" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Est. Swap Value ($)</label>
+              <div class="flex items-center justify-between mb-1">
+                <label for="itemValueEstimate" class="block text-xs font-bold uppercase tracking-wider text-slate-400">Est. Swap Value ($)</label>
+                <button type="button" (click)="calculateAutoValue()" class="text-[10px] font-bold text-emerald-500 hover:underline">
+                  ✨ Auto-Calculate
+                </button>
+              </div>
               <input
                 id="itemValueEstimate"
                 name="valueEstimate"
@@ -343,6 +348,36 @@ export class ItemCreateComponent implements OnInit {
   clearDraft(): void {
     localStorage.removeItem('rewear_item_draft');
     this.hasSavedDraft.set(false);
+  }
+
+  calculateAutoValue(): void {
+    const category = this.itemForm.get('category')?.value || 'Outerwear';
+    const condition = this.itemForm.get('condition')?.value || 'Like New';
+    const brand = (this.itemForm.get('brand')?.value || '').toLowerCase();
+
+    let base = 50;
+    if (['Outerwear', 'Jackets', 'Coats', 'Suits'].includes(category)) base = 120;
+    else if (['Dresses', 'Boots', 'Shoes'].includes(category)) base = 85;
+    else if (['Tops', 'Shirts', 'Sweaters', 'Knitwear', 'Vintage'].includes(category)) base = 60;
+    else if (['Pants', 'Jeans', 'Skirts', 'Bottoms'].includes(category)) base = 70;
+    else if (['Accessories', 'Bags'].includes(category)) base = 90;
+
+    let multiplier = 1.0;
+    if (condition === 'New with Tags') multiplier = 1.3;
+    else if (condition === 'Like New') multiplier = 1.1;
+    else if (condition === 'Good') multiplier = 0.9;
+    else if (condition === 'Fair') multiplier = 0.7;
+
+    let brandBonus = 0;
+    const luxuryBrands = ['gucci', 'prada', 'burberry', 'chanel', 'dior', 'louis vuitton', 'balenciaga', 'armani'];
+    const premiumBrands = ['nike', 'adidas', 'levi', "levi's", 'zara', 'polo', 'ralph lauren', 'patagonia', 'north face', 'tommy'];
+
+    if (luxuryBrands.some((b) => brand.includes(b))) brandBonus = 100;
+    else if (premiumBrands.some((b) => brand.includes(b))) brandBonus = 35;
+
+    const estimated = Math.round(base * multiplier + brandBonus);
+    this.itemForm.patchValue({ valueEstimate: estimated });
+    this.notification.info('Value Estimated', `Calculated ~$${estimated} based on ${category}, ${condition}, and brand level.`);
   }
 
   private fetchExistingItem(id: string): void {

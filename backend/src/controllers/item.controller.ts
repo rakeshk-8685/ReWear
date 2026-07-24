@@ -59,6 +59,7 @@ export class ItemController {
         minValue,
         maxValue,
         status,
+        location,
         ownerId,
         excludeOwnerId,
         page,
@@ -75,6 +76,7 @@ export class ItemController {
         minValue: minValue ? Number(minValue) : undefined,
         maxValue: maxValue ? Number(maxValue) : undefined,
         status: status as string,
+        location: location as string,
         ownerId: ownerId as string,
         excludeOwnerId: excludeOwnerId as string,
       };

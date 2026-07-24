@@ -10,6 +10,7 @@ export interface IItemFilterOptions {
   minValue?: number;
   maxValue?: number;
   status?: string;
+  location?: string;
   ownerId?: string;
   excludeOwnerId?: string;
 }
@@ -77,6 +78,10 @@ export class ItemRepository {
       if (options.maxValue !== undefined) query.valueEstimate.$lte = options.maxValue;
     }
 
+    if (options.location && options.location !== 'ALL') {
+      query.location = { $regex: options.location, $options: 'i' };
+    }
+
     if (options.ownerId) {
       query.owner = options.ownerId;
     }
@@ -90,6 +95,7 @@ export class ItemRepository {
         { title: { $regex: options.search, $options: 'i' } },
         { description: { $regex: options.search, $options: 'i' } },
         { brand: { $regex: options.search, $options: 'i' } },
+        { location: { $regex: options.search, $options: 'i' } },
         { tags: { $in: [new RegExp(options.search, 'i')] } },
       ];
     }
