@@ -23,3 +23,18 @@ export const authenticateJwt = (req: AuthenticatedRequest, _res: Response, next:
     return next(ApiError.unauthorized('Invalid or expired authentication token.'));
   }
 };
+
+export const optionalAuthenticateJwt = (req: AuthenticatedRequest, _res: Response, next: NextFunction): void => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+    try {
+      const decoded = verifyAccessToken(token);
+      req.user = decoded;
+    } catch {
+      // Ignore token verification failure on public routes
+    }
+  }
+  next();
+};

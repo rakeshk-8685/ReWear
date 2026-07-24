@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { itemController } from '../controllers/item.controller';
-import { authenticateJwt } from '../middleware/auth.middleware';
+import { authenticateJwt, optionalAuthenticateJwt } from '../middleware/auth.middleware';
 import { upload } from '../middleware/upload.middleware';
 
 const router = Router();
 
-router.get('/', (req, res, next) => itemController.getFilteredItems(req, res, next));
-router.get('/:id', (req, res, next) => itemController.getItemById(req, res, next));
+router.get('/', optionalAuthenticateJwt, (req, res, next) => itemController.getFilteredItems(req, res, next));
+router.get('/:id', optionalAuthenticateJwt, (req, res, next) => itemController.getItemById(req, res, next));
 router.post(
   '/',
   authenticateJwt,
