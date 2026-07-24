@@ -24,7 +24,7 @@ services:
         fromService:
           type: web
           name: rewear-web
-          property: url
+          property: host
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY
