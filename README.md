@@ -81,25 +81,6 @@ ReWear/
 └── README.md
 ```
 
----
-
-## 🔌 API Endpoints Summary
-
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :---: |
-| `POST` | `/api/auth/register` | Register a new swapper account | ❌ Public |
-| `POST` | `/api/auth/login` | Authenticate user & issue JWT tokens | ❌ Public |
-| `GET` | `/api/items` | Fetch garment listings with filtering & pagination | ❌ Public |
-| `POST` | `/api/items` | List a new clothing item (supports image upload) | ✅ Protected |
-| `POST` | `/api/swaps` | Propose a new swap request | ✅ Protected |
-| `GET` | `/api/swaps/my-swaps` | Retrieve incoming & outgoing swap requests | ✅ Protected |
-| `PATCH` | `/api/swaps/:id/status` | Accept, reject, or cancel a swap request | ✅ Protected |
-| `GET` | `/api/chat/messages/:swapId` | Fetch chat message history for a swap | ✅ Protected |
-| `GET` | `/health` | API Gateway health check endpoint | ❌ Public |
-
-> ℹ️ **Note on Public Endpoints**: Public routes (`/api/auth/register`, `/api/auth/login`, `/api/items`, `/health`) are open and accessible to all clients without requiring `Authorization` Bearer tokens. `/api/items` uses `optionalAuthenticateJwt` to allow unauthenticated guest browsing while offering personalized features for logged-in swappers.
-
----
 
 ## 🚀 Quick Start (Local Development)
 
