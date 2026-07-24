@@ -1,0 +1,37 @@
+{
+  "name": "ReWear — Clothing Exchange & Swap Marketplace",
+  "short_name": "ReWear",
+  "description": "Peer-to-peer sustainable clothing marketplace. Swap pre-loved apparel, jackets, sneakers, and vintage clothes with zero dollar transactions.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Explore Feed",
+      "short_name": "Feed",
+      "description": "Browse active clothing items available for swap",
+      "url": "/items"
+    },
+    {
+      "name": "Post Garment",
+      "short_name": "List Item",
+      "description": "List a pre-loved garment for exchange",
+      "url": "/items/create"
+    },
+    {
+      "name": "Trade Center",
+      "short_name": "Swaps",
+      "description": "View active trade proposals and swap offers",
+      "url": "/swaps"
+    }
+  ]
+}

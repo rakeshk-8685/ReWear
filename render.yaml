@@ -1,0 +1,47 @@
+services:
+  # ---------------------------------------------------
+  # ReWear Express + Node.js API Service
+  # ---------------------------------------------------
+  - type: web
+    name: rewear-api
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CLIENT_URL
+        fromService:
+          type: web
+          name: rewear-web
+          property: url
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+  # ---------------------------------------------------
+  # ReWear Angular 20 SPA Static Web Site
+  # ---------------------------------------------------
+  - type: web
+    name: rewear-web
+    env: static
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist/frontend/browser
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
