@@ -156,22 +156,7 @@ docker-compose up --build
 - **Backend API Gateway**: `http://localhost:5000/api`
 - **MongoDB**: `localhost:27017`
 
----
 
-## 🌐 Deploying to Render
-
-This project includes a pre-configured `render.yaml` blueprint file for effortless 1-click deployment on Render.com:
-
-1. Push your repository to GitHub: [https://github.com/rakeshk-8685/ReWear](https://github.com/rakeshk-8685/ReWear).
-2. Go to [Render Dashboard](https://dashboard.render.com/) -> **New +** -> **Blueprint**.
-3. Connect the **`rakeshk-8685/ReWear`** repository.
-4. Set the `MONGO_URI` environment variable to your MongoDB Atlas connection string:
-   ```text
-   mongodb+srv://rakeshkr8685_db_user:<YOUR_PASSWORD>@cluster0.abxawlp.mongodb.net/?appName=Cluster0
-   ```
-5. Click **Apply**. Render will automatically build both the Node.js API Web Service and the Angular Static Web Site!
-
----
 
 ## 🤝 Contributing
 
