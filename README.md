@@ -1,5 +1,6 @@
 # 👕 ReWear - Sustainable Clothing Swap & Exchange Marketplace
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-rakeshk--8685%2FReWear-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rakeshk-8685/ReWear)
 [![Angular](https://img.shields.io/badge/Angular-20.3-dd0031?style=for-the-badge&logo=angular&logoColor=white)](https://angular.dev/)
 [![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express-4.19-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
@@ -82,6 +83,24 @@ ReWear/
 
 ---
 
+## 🔌 API Endpoints Summary
+
+| Method | Endpoint | Description | Auth Required |
+| :--- | :--- | :--- | :---: |
+| `POST` | `/api/auth/register` | Register a new swapper account | ❌ Public |
+| `POST` | `/api/auth/login` | Authenticate user & issue JWT tokens | ❌ Public |
+| `GET` | `/api/items` | Fetch garment listings with filtering & pagination | ❌ Public |
+| `POST` | `/api/items` | List a new clothing item (supports image upload) | ✅ Protected |
+| `POST` | `/api/swaps` | Propose a new swap request | ✅ Protected |
+| `GET` | `/api/swaps/my-swaps` | Retrieve incoming & outgoing swap requests | ✅ Protected |
+| `PATCH` | `/api/swaps/:id/status` | Accept, reject, or cancel a swap request | ✅ Protected |
+| `GET` | `/api/chat/messages/:swapId` | Fetch chat message history for a swap | ✅ Protected |
+| `GET` | `/health` | API Gateway health check endpoint | ❌ Public |
+
+> ℹ️ **Note on Public Endpoints**: Public routes (`/api/auth/register`, `/api/auth/login`, `/api/items`, `/health`) are open and accessible to all clients without requiring `Authorization` Bearer tokens. `/api/items` uses `optionalAuthenticateJwt` to allow unauthenticated guest browsing while offering personalized features for logged-in swappers.
+
+---
+
 ## 🚀 Quick Start (Local Development)
 
 ### Prerequisites
@@ -100,7 +119,7 @@ Create a `.env` file in the `backend/` directory:
 ```env
 PORT=5000
 NODE_ENV=development
-MONGO_URI=mongodb://127.0.0.1:27017/rewear_db
+MONGO_URI=mongodb+srv://rakeshkr8685_db_user:<YOUR_PASSWORD>@cluster0.abxawlp.mongodb.net/?appName=Cluster0
 JWT_SECRET=super_secret_access_key_2026
 JWT_REFRESH_SECRET=super_secret_refresh_key_2026
 CLIENT_URL=http://localhost:4200
@@ -143,30 +162,14 @@ docker-compose up --build
 
 This project includes a pre-configured `render.yaml` blueprint file for effortless 1-click deployment on Render.com:
 
-1. Push your repository to GitHub: `https://github.com/rakeshk-8685/ReWear`.
+1. Push your repository to GitHub: [https://github.com/rakeshk-8685/ReWear](https://github.com/rakeshk-8685/ReWear).
 2. Go to [Render Dashboard](https://dashboard.render.com/) -> **New +** -> **Blueprint**.
-3. Connect the **`ReWear`** repository.
-4. Set the `MONGO_URI` variable to your MongoDB Atlas connection string:
+3. Connect the **`rakeshk-8685/ReWear`** repository.
+4. Set the `MONGO_URI` environment variable to your MongoDB Atlas connection string:
    ```text
    mongodb+srv://rakeshkr8685_db_user:<YOUR_PASSWORD>@cluster0.abxawlp.mongodb.net/?appName=Cluster0
    ```
 5. Click **Apply**. Render will automatically build both the Node.js API Web Service and the Angular Static Web Site!
-
----
-
-## 🔌 API Endpoints Summary
-
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :---: |
-| `POST` | `/api/auth/register` | Register a new swapper account | ❌ |
-| `POST` | `/api/auth/login` | Authenticate user & issue tokens | ❌ |
-| `GET` | `/api/items` | Fetch garment listings with filtering & pagination | ❌ |
-| `POST` | `/api/items` | List a new clothing item (supports image upload) | ✅ |
-| `POST` | `/api/swaps` | Propose a new swap request | ✅ |
-| `GET` | `/api/swaps/my-swaps` | Retrieve incoming & outgoing swap requests | ✅ |
-| `PATCH` | `/api/swaps/:id/status` | Accept, reject, or cancel a swap request | ✅ |
-| `GET` | `/api/chat/messages/:swapId` | Fetch chat message history for a swap | ✅ |
-| `GET` | `/health` | API Gateway health check endpoint | ❌ |
 
 ---
 
