@@ -147,7 +147,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 
             <!-- Pins Radar Stream Grid -->
             <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              @for (item of filteredItems(); track item._id) {
+              @for (item of filteredItems(); track item._id + '-' + $index) {
                 <div
                   (click)="openQuickPreview(item)"
                   class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-emerald-500/80 cursor-pointer transition-all hover:scale-105 shadow-lg group"
@@ -180,7 +180,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
           ></app-empty-state>
         } @else {
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            @for (item of filteredItems(); track item._id) {
+            @for (item of filteredItems(); track item._id + '-' + $index) {
               <app-item-card
                 [item]="item"
                 (quickPreview)="openQuickPreview($event)"

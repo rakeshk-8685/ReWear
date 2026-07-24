@@ -74,7 +74,7 @@ import { SwapRequest, SwapStatus } from '../../../core/models/swap.model';
         </div>
       } @else {
         <div class="grid grid-cols-1 gap-6">
-          @for (swap of filteredSwaps(); track swap._id) {
+          @for (swap of filteredSwaps(); track swap._id + '-' + $index) {
             <div class="space-y-3">
               <app-swap-card
                 [swap]="swap"

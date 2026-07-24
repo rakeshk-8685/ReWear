@@ -650,7 +650,16 @@ export class ItemDetailComponent implements OnInit {
             this.router.navigate(['/swaps']);
           }
         },
-        error: () => this.submittingProposal.set(false),
+        error: (err) => {
+          this.submittingProposal.set(false);
+          this.openSwapModal.set(false);
+          if (err.status === 409) {
+            this.notification.warning('Active Offer Exists', err.error?.message || 'You already have an active pending proposal for this item.');
+            this.router.navigate(['/swaps']);
+          } else {
+            this.notification.error('Proposal Failed', err.error?.message || 'Failed to submit trade proposal.');
+          }
+        },
       });
   }
 }

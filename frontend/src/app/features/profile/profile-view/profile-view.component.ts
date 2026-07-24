@@ -122,7 +122,7 @@ import { RatingStarsComponent } from '../../../shared/components/rating-stars/ra
             </div>
           } @else {
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              @for (item of closetItems(); track item._id) {
+              @for (item of closetItems(); track item._id + '-' + $index) {
                 <app-item-card [item]="item" />
               }
             </div>
@@ -160,7 +160,7 @@ import { RatingStarsComponent } from '../../../shared/components/rating-stars/ra
               </div>
             } @else {
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                @for (item of wishlistItems(); track item._id) {
+                @for (item of wishlistItems(); track item._id + '-' + $index) {
                   <app-item-card [item]="item" />
                 }
               </div>
