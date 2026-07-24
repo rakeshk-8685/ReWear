@@ -23,7 +23,7 @@ services:
     environment:
       PORT: 5000
       NODE_ENV: production
-      MONGODB_URI: mongodb+srv://rakeshkr8685_db_user:Rakesh%40422@cluster0.abxawlp.mongodb.net/?appName=Cluster0
+      MONGODB_URI: mongodb+srv://rakeshkr8685_db_user:FCJdUksOkpeCIyRl@cluster0.abxawlp.mongodb.net/?appName=Cluster0
       JWT_SECRET: supersecret_jwt_key_rewear_enterprise
       JWT_REFRESH_SECRET: supersecret_refresh_jwt_key_rewear
       CLIENT_URL: http://localhost
