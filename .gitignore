@@ -1,33 +1,49 @@
-# Node modules
+# ==========================================
+# ReWear Root Git Ignore Configuration
+# ==========================================
+
+# Dependencies
 **/node_modules/
 node_modules/
 
-# Build outputs
+# Build & Compilation Outputs
 **/dist/
 dist/
 **/out-tsc/
 **/tmp/
+**/build/
 
-# Environment files
+# Environment & Local Configuration Files
 .env
 .env.local
 .env.*.local
 *.env
+!.env.example
+!backend/.env.example
 
-# Angular cache
+# Angular Workspace Cache & Coverage
 **/.angular/
 .angular/
+**/coverage/
 
-# IDE and Editor files
+# IDE & Code Editor Files
+**/.vscode/
 .vscode/
+**/.idea/
 .idea/
 *.swp
 *.swo
+*.sublime-workspace
+
+# Operating System Files
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Logs
+# Logs & Debugging
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
