@@ -9,10 +9,14 @@ import { errorHandler } from './middleware/error.middleware';
 
 const app: Application = express();
 
-// Security HTTP Headers
+// Trust reverse proxy (Render / NGINX / Cloudflare) to ensure correct req.ip and req.secure
+app.set('trust proxy', 1);
+
+// Security HTTP Headers with cross-origin resource policy
 app.use(
   helmet({
     contentSecurityPolicy: false, // Allows cross-origin image loading for Cloudinary & Unsplash
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
   })
 );
 
@@ -80,31 +84,41 @@ const corsOptions: cors.CorsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'Accept',
+    'Origin',
+    'Access-Control-Allow-Headers',
+    'Access-Control-Request-Method',
+    'Access-Control-Request-Headers',
+  ],
+  exposedHeaders: ['Set-Cookie', 'Authorization'],
   optionsSuccessStatus: 200,
   maxAge: 86400, // 24 hours preflight cache
 };
 
 // Register CORS middleware at the very top before all routes & rate limiters
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
-app.options('/api/*', cors(corsOptions));
 
-// Global API Rate Limiting (5000 requests per 15 min per IP)
+// Global API Rate Limiting (5000 requests per 15 min per IP) - Skip OPTIONS preflight requests
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5000,
   message: { success: false, message: 'Too many requests from this IP, please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req: Request) => req.method === 'OPTIONS',
 });
 app.use('/api', globalLimiter);
 
-// Auth Endpoint High-Volume Rate Limiter for Dev/Testing (5000 attempts per 15 min)
+// Auth Endpoint High-Volume Rate Limiter for Dev/Testing (5000 attempts per 15 min) - Skip OPTIONS preflight requests
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5000,
   message: { success: false, message: 'Too many authentication attempts. Please try again later.' },
+  skip: (req: Request) => req.method === 'OPTIONS',
 });
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
