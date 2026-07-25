@@ -30,10 +30,11 @@ export class AuthController {
       validateLoginInput(req.body);
       const result = await authService.login(req.body);
 
+      const isProd = process.env.NODE_ENV === 'production';
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -48,10 +49,11 @@ export class AuthController {
       const token = req.cookies?.refreshToken || req.body?.refreshToken;
       const result = await authService.refreshToken(token);
 
+      const isProd = process.env.NODE_ENV === 'production';
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -73,10 +75,13 @@ export class AuthController {
           }
         } catch {}
       }
-      res.clearCookie('refreshToken');
+      const isProd = process.env.NODE_ENV === 'production';
+      const cookieOpts = { httpOnly: true, secure: isProd, sameSite: (isProd ? 'none' : 'lax') as any };
+      res.clearCookie('refreshToken', cookieOpts);
       ApiResponse.success(res, 'Logged out successfully');
     } catch (error) {
-      res.clearCookie('refreshToken');
+      const isProd = process.env.NODE_ENV === 'production';
+      res.clearCookie('refreshToken', { httpOnly: true, secure: isProd, sameSite: (isProd ? 'none' : 'lax') as any });
       ApiResponse.success(res, 'Logged out successfully');
     }
   }
