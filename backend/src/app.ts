@@ -163,6 +163,11 @@ app.get('/api-docs.json', (_req: Request, res: Response) => {
   res.send(swaggerSpec);
 });
 
+// Favicon handler to prevent 404 console logs for favicon requests
+app.get('/favicon.ico', (_req: Request, res: Response) => {
+  res.status(204).end();
+});
+
 // Health check endpoint
 app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({
@@ -174,10 +179,25 @@ app.get('/health', (_req: Request, res: Response) => {
   });
 });
 
+import { checkDbConnection } from './middleware/db-check.middleware';
+
+// Database Connection Check Middleware to prevent buffering timeouts
+app.use('/api', checkDbConnection);
+
 // API Routes Router Mount
 app.use('/api', routes);
+
+
+// 404 Catch-All Middleware for unmatched API & static routes
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: `Resource not found: ${req.method} ${req.originalUrl}`,
+  });
+});
 
 // Global Error Handler
 app.use(errorHandler);
 
 export default app;
+

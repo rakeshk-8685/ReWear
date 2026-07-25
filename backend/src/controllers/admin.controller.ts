@@ -23,6 +23,18 @@ export class AdminController {
     }
   }
 
+  async getAllItems(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+      const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 50;
+      const result = await adminService.getAllItems(page, limit);
+      ApiResponse.success(res, 'All platform items fetched for admin moderation', result.items, 200, { total: result.total, page, limit });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+
   async updateUserRole(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { role } = req.body;

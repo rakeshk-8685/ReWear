@@ -43,6 +43,12 @@ export class AdminService {
     return userRepository.findAll({}, skip, limit);
   }
 
+  async getAllItems(page: number = 1, limit: number = 50) {
+    const skip = (page - 1) * limit;
+    const { items, total } = await itemRepository.findFiltered({}, skip, limit);
+    return { items, total };
+  }
+
   async updateUserRole(targetUserId: string, newRole: 'USER' | 'MODERATOR' | 'ADMIN') {
     const user = await userRepository.findById(targetUserId);
     if (!user) {
