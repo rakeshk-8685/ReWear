@@ -75,18 +75,20 @@ const corsOptions: cors.CorsOptions = {
     if (isOriginAllowed(origin)) {
       return callback(null, true);
     }
-    console.warn(`[CORS] Rejected request from unauthorized origin: ${origin}`);
-    return callback(new Error('Not allowed by CORS'));
+    console.warn(`[CORS] Disallowed origin: ${origin}`);
+    return callback(null, false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   optionsSuccessStatus: 200,
+  maxAge: 86400, // 24 hours preflight cache
 };
 
 // Register CORS middleware at the very top before all routes & rate limiters
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
+app.options('/api/*', cors(corsOptions));
 
 // Global API Rate Limiting (5000 requests per 15 min per IP)
 const globalLimiter = rateLimit({
