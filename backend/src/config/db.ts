@@ -3,10 +3,24 @@ import { env } from './env';
 
 export const connectDB = async (): Promise<void> => {
   try {
-    let uri = env.MONGO_URI;
+    let uri = (env.MONGO_URI || '').trim().replace(/^["']|["']$/g, '');
+
+    if (!uri) {
+      console.error('[MongoDB] Error: MONGO_URI environment variable is missing or empty!');
+      console.error('[MongoDB] Please set MONGO_URI in your Render Dashboard under Environment Variables.');
+      process.exit(1);
+    }
 
     // Handle unencoded @ symbols in database password
     const srvPrefix = 'mongodb+srv://';
+    const standardPrefix = 'mongodb://';
+
+    if (!uri.startsWith(srvPrefix) && !uri.startsWith(standardPrefix)) {
+      console.error(`[MongoDB] Invalid connection string scheme: "${uri}"`);
+      console.error('[MongoDB] Connection string must start with "mongodb://" or "mongodb+srv://".');
+      process.exit(1);
+    }
+
     if (uri.startsWith(srvPrefix)) {
       const rest = uri.slice(srvPrefix.length);
       const lastAtIndex = rest.lastIndexOf('@');
