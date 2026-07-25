@@ -8,7 +8,7 @@ export const connectDB = async (): Promise<void> => {
     if (!uri) {
       console.error('[MongoDB] Error: MONGO_URI environment variable is missing or empty!');
       console.error('[MongoDB] Please set MONGO_URI in your Render Dashboard under Environment Variables.');
-      process.exit(1);
+      return;
     }
 
     // Handle unencoded @ symbols in database password
@@ -18,7 +18,7 @@ export const connectDB = async (): Promise<void> => {
     if (!uri.startsWith(srvPrefix) && !uri.startsWith(standardPrefix)) {
       console.error(`[MongoDB] Invalid connection string scheme: "${uri}"`);
       console.error('[MongoDB] Connection string must start with "mongodb://" or "mongodb+srv://".');
-      process.exit(1);
+      return;
     }
 
     if (uri.startsWith(srvPrefix)) {
@@ -43,6 +43,5 @@ export const connectDB = async (): Promise<void> => {
     console.log(`[MongoDB] Database connected successfully: ${conn.connection.host}`);
   } catch (error) {
     console.error(`[MongoDB] Error connecting to database:`, error);
-    process.exit(1);
   }
 };

@@ -7,19 +7,11 @@ import { seedDatabaseIfEmpty } from './utils/seed';
 
 const startServer = async () => {
   try {
-    // Connect to MongoDB
-    await connectDB();
-
-    // Auto-seed demo garments and users if database is currently empty
-    await seedDatabaseIfEmpty();
-
-    // Create HTTP Server
+    // Create HTTP Server & Socket.io Engine
     const server = http.createServer(app);
-
-    // Initialize Socket.io Real-Time Engine
     initSocketServer(server);
 
-    // Start Listening
+    // Start Listening immediately so Render health checks & CORS preflights succeed
     server.listen(env.PORT, () => {
       console.log(`=================================================`);
       console.log(`  🚀 ReWear Enterprise Backend Engine Started  `);
@@ -28,6 +20,14 @@ const startServer = async () => {
       console.log(`  ⚡ Socket.io   : http://localhost:${env.PORT}`);
       console.log(`=================================================`);
     });
+
+    // Connect to MongoDB asynchronously
+    try {
+      await connectDB();
+      await seedDatabaseIfEmpty();
+    } catch (dbErr) {
+      console.error('[MongoDB] Warning: Initial database connection failed:', dbErr);
+    }
   } catch (error) {
     console.error('Failed to start server:', error);
     process.exit(1);
