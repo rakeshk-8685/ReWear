@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { userRepository } from '../repositories/user.repository';
 import { hashPassword, comparePassword } from '../utils/password.utils';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.utils';
@@ -5,6 +6,10 @@ import { ApiError } from '../utils/api-error';
 
 export class AuthService {
   async register(data: { name: string; email: string; password: string; role?: 'USER' | 'MODERATOR' | 'ADMIN' }) {
+    if (mongoose.connection.readyState !== 1) {
+      throw ApiError.internal('Database connection is not active. Please ensure MONGO_URI is set on Render and 0.0.0.0/0 IP is allowed in MongoDB Atlas.');
+    }
+
     const existing = await userRepository.findByEmail(data.email);
     if (existing) {
       throw ApiError.conflict('User with this email already exists.');
@@ -32,6 +37,10 @@ export class AuthService {
   }
 
   async login(data: { email: string; password: string }) {
+    if (mongoose.connection.readyState !== 1) {
+      throw ApiError.internal('Database connection is not active. Please ensure MONGO_URI is set on Render and 0.0.0.0/0 IP is allowed in MongoDB Atlas.');
+    }
+
     let user = await userRepository.findByEmail(data.email);
 
     // Auto-seed demo accounts if logging in with demo credentials for first time

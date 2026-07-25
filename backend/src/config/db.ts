@@ -3,7 +3,7 @@ import { env } from './env';
 
 export const connectDB = async (): Promise<void> => {
   try {
-    let uri = (env.MONGO_URI || '').trim().replace(/^["']|["']$/g, '');
+    let uri = (process.env.MONGO_URI || process.env.MONGODB_URI || env.MONGO_URI || '').trim().replace(/^["']|["']$/g, '');
 
     if (!uri) {
       console.error('[MongoDB] Error: MONGO_URI environment variable is missing or empty!');
@@ -39,6 +39,7 @@ export const connectDB = async (): Promise<void> => {
 
     const conn = await mongoose.connect(uri, {
       dbName: 'rewear',
+      serverSelectionTimeoutMS: 5000,
     });
     console.log(`[MongoDB] Database connected successfully: ${conn.connection.host}`);
   } catch (error) {
