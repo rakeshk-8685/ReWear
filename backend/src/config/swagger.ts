@@ -28,7 +28,7 @@ Authorization: Bearer <your_access_token>
   },
   servers: [
     {
-      url: 'https://rewear-api.onrender.com',
+      url: 'https://rewear-api-cmrq.onrender.com',
       description: 'Production Live Render Server',
     },
     {

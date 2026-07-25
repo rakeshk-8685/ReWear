@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: (window as any).__env?.apiUrl || 'https://rewear-api.onrender.com/api',
-  socketUrl: (window as any).__env?.socketUrl || 'https://rewear-api.onrender.com',
+  apiUrl: (window as any).__env?.apiUrl || 'https://rewear-api-cmrq.onrender.com/api',
+  socketUrl: (window as any).__env?.socketUrl || 'https://rewear-api-cmrq.onrender.com',
   firebase: {
     apiKey: "AIzaSyB_9Ibym8TFomkz8bKOTxAYvYzrq_fRRfc",
     authDomain: "rewear-8a08c.firebaseapp.com",

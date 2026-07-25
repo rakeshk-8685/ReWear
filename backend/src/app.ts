@@ -27,6 +27,7 @@ app.use(compression());
 const baseAllowedOrigins = [
   'https://rewear-web.onrender.com',
   'https://rewear-web-4n17.onrender.com',
+  'https://rewear-api-cmrq.onrender.com',
   'http://localhost:4200',
   'http://localhost:5173',
   'http://localhost:3000',
@@ -168,7 +169,7 @@ app.get('/health', (_req: Request, res: Response) => {
     status: 'UP',
     service: 'ReWear Enterprise API Gateway',
     environment: env.NODE_ENV,
-    swaggerDocs: 'https://rewear-api.onrender.com/api-docs',
+    swaggerDocs: 'https://rewear-api-cmrq.onrender.com/api-docs',
     timestamp: new Date().toISOString(),
   });
 });

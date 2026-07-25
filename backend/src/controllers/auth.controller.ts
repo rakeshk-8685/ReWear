@@ -20,7 +20,8 @@ export class AuthController {
       });
 
       ApiResponse.created(res, 'User account registered successfully', result);
-    } catch (error) {
+    } catch (error: any) {
+      console.warn(`[Auth] Registration failed for email: "${req.body?.email || 'N/A'}" | Reason:`, error?.message || error);
       next(error);
     }
   }
@@ -39,7 +40,8 @@ export class AuthController {
       });
 
       ApiResponse.success(res, 'Logged in successfully', result);
-    } catch (error) {
+    } catch (error: any) {
+      console.warn(`[Auth] Login failed for email: "${req.body?.email || 'N/A'}" | Reason:`, error?.message || error);
       next(error);
     }
   }
@@ -58,7 +60,8 @@ export class AuthController {
       });
 
       ApiResponse.success(res, 'Access token refreshed successfully', result);
-    } catch (error) {
+    } catch (error: any) {
+      console.warn(`[Auth] Token refresh failed | Reason:`, error?.message || error);
       next(error);
     }
   }
