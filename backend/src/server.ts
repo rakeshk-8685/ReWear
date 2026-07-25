@@ -17,6 +17,7 @@ const startServer = async () => {
       console.log(`  🚀 ReWear Enterprise Backend Engine Started  `);
       console.log(`  🌐 Environment : ${env.NODE_ENV}`);
       console.log(`  📡 HTTP API    : http://localhost:${env.PORT}/api`);
+      console.log(`  📚 Swagger UI  : http://localhost:${env.PORT}/api-docs`);
       console.log(`  ⚡ Socket.io   : http://localhost:${env.PORT}`);
       console.log(`=================================================`);
     });

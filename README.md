@@ -45,6 +45,16 @@
 ### Deployment & DevOps
 - **Containerization**: Docker & Docker Compose (`docker-compose.yml`)
 - **Production Hosting**: Render Blueprint (`render.yaml`)
+- **API Documentation**: OpenAPI 3.0 & Swagger UI ([https://rewear-api.onrender.com/api-docs](https://rewear-api.onrender.com/api-docs))
+
+---
+
+## 📚 API Documentation (Swagger UI)
+
+Interactive OpenAPI documentation for the backend API is available at:
+- **Production Swagger UI**: [https://rewear-api.onrender.com/api-docs](https://rewear-api.onrender.com/api-docs)
+- **Local Swagger UI**: [http://localhost:5000/api-docs](http://localhost:5000/api-docs)
+- **Raw OpenAPI JSON Spec**: [https://rewear-api.onrender.com/api-docs.json](https://rewear-api.onrender.com/api-docs.json)
 
 ---
 

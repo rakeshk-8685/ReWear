@@ -149,12 +149,26 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
   next();
 });
 
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
+
+// Expose OpenAPI Specs & Interactive Swagger UI Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.get('/api-docs.json', (_req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
 // Health check endpoint
 app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({
     status: 'UP',
     service: 'ReWear Enterprise API Gateway',
     environment: env.NODE_ENV,
+    swaggerDocs: 'https://rewear-api.onrender.com/api-docs',
     timestamp: new Date().toISOString(),
   });
 });
