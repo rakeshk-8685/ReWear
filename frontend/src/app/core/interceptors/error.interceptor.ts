@@ -9,7 +9,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error) => {
       let errorMessage = 'An unexpected error occurred.';
-      if (error.error?.message) {
+      if (error.status === 0) {
+        errorMessage = 'Unable to connect to ReWear API server. Please ensure backend service is active on Render.';
+      } else if (error.error?.message) {
         errorMessage = error.error.message;
       } else if (error.message) {
         errorMessage = error.message;
@@ -18,7 +20,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       // Show notification for login failures or non-token-refresh 401s
       if (error.status !== 401 || req.url.includes('/auth/login')) {
         notificationService.error(
-          req.url.includes('/auth/login') ? 'Authentication Failed' : 'Request Failed',
+          req.url.includes('/auth/login') ? 'Authentication Failed' : 'API Connection Error',
           errorMessage
         );
       }
