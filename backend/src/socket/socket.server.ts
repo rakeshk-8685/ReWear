@@ -5,12 +5,19 @@ import { registerChatHandlers } from './chat.handler';
 import { registerNotificationHandlers } from './notification.handler';
 import { env } from '../config/env';
 
+import { isOriginAllowed } from '../app';
+
 let ioInstance: Server | null = null;
 
 export const initSocketServer = (httpServer: HttpServer): Server => {
   const io = new Server(httpServer, {
     cors: {
-      origin: (origin, callback) => callback(null, true),
+      origin: (origin, callback) => {
+        if (isOriginAllowed(origin)) {
+          return callback(null, true);
+        }
+        return callback(new Error('Not allowed by CORS'));
+      },
       methods: ['GET', 'POST'],
       credentials: true,
     },
