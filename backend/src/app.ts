@@ -168,6 +168,23 @@ app.get('/favicon.ico', (_req: Request, res: Response) => {
   res.status(204).end();
 });
 
+// Root route
+app.get('/', (_req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: 'ReWear API is running 🚀',
+  });
+});
+
+// API health endpoint
+app.get('/api/health', (_req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: 'ReWear API is healthy',
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Health check endpoint
 app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({

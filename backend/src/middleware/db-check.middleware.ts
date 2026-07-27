@@ -4,7 +4,13 @@ import { connectDB } from '../config/db';
 
 export const checkDbConnection = (req: Request, res: Response, next: NextFunction): void => {
   // Allow health check and static docs without DB connection
-  if (req.path === '/health' || req.path.startsWith('/api-docs') || req.path.startsWith('/docs')) {
+  if (
+    req.path === '/' ||
+    req.path === '/health' ||
+    req.path === '/api/health' ||
+    req.path.startsWith('/api-docs') ||
+    req.path.startsWith('/docs')
+  ) {
     return next();
   }
 
