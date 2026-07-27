@@ -1,4 +1,5 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
+import mongoose from 'mongoose';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -27,7 +28,7 @@ app.use(compression());
 const baseAllowedOrigins = [
   'https://rewear-web.onrender.com',
   'https://rewear-web-4n17.onrender.com',
-  'https://rewear-api-cmrq.onrender.com',
+  'https://rewear-api-dm0d.onrender.com',
   'http://localhost:4200',
   'http://localhost:5173',
   'http://localhost:3000',
@@ -178,9 +179,11 @@ app.get('/', (_req: Request, res: Response) => {
 
 // API health endpoint
 app.get('/api/health', (_req: Request, res: Response) => {
+  const isDbConnected = mongoose.connection.readyState === 1;
   res.status(200).json({
     success: true,
-    message: 'ReWear API is healthy',
+    server: 'healthy',
+    database: isDbConnected ? 'connected' : 'disconnected',
     timestamp: new Date().toISOString(),
   });
 });
@@ -191,7 +194,7 @@ app.get('/health', (_req: Request, res: Response) => {
     status: 'UP',
     service: 'ReWear Enterprise API Gateway',
     environment: env.NODE_ENV,
-    swaggerDocs: 'https://rewear-api-cmrq.onrender.com/api-docs',
+    swaggerDocs: 'https://rewear-api-dm0d.onrender.com/api-docs',
     timestamp: new Date().toISOString(),
   });
 });
