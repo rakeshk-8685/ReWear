@@ -42,7 +42,19 @@ export const connectDB = async (): Promise<void> => {
       serverSelectionTimeoutMS: 5000,
     });
     console.log(`[MongoDB] Database connected successfully: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`[MongoDB] Error connecting to database:`, error);
+  } catch (error: any) {
+    console.error(`[MongoDB] Error connecting to database:`, error?.message || error);
+    if (process.env.NODE_ENV !== 'production') {
+      const localUri = 'mongodb://127.0.0.1:27017/rewear';
+      console.log(`[MongoDB] Attempting fallback connection to local database: ${localUri}`);
+      try {
+        const conn = await mongoose.connect(localUri, {
+          serverSelectionTimeoutMS: 3000,
+        });
+        console.log(`[MongoDB] Fallback database connected successfully: ${conn.connection.host}`);
+      } catch (localErr: any) {
+        console.error(`[MongoDB] Local fallback database connection failed:`, localErr?.message || localErr);
+      }
+    }
   }
 };

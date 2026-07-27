@@ -45,6 +45,18 @@ export const routes: Routes = [
           import('./features/swaps/swap-dashboard/swap-dashboard.component').then((m) => m.SwapDashboardComponent),
       },
       {
+        path: 'swaps/request',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/swaps/swap-request/swap-request.component').then((m) => m.SwapRequestComponent),
+      },
+      {
+        path: 'swaps/request/:targetId',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/swaps/swap-request/swap-request.component').then((m) => m.SwapRequestComponent),
+      },
+      {
         path: 'chat',
         canActivate: [authGuard],
         loadComponent: () =>

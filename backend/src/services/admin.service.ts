@@ -66,6 +66,49 @@ export class AdminService {
     }
     return itemRepository.update(itemId, { status });
   }
+
+  async getAllSwaps(page: number = 1, limit: number = 50) {
+    const skip = (page - 1) * limit;
+    const total = await SwapRequest.countDocuments();
+    const swaps = await SwapRequest.find()
+      .populate('requester', 'name email avatarUrl location')
+      .populate('receiver', 'name email avatarUrl location')
+      .populate('requestedItem', 'title category images valueEstimate condition')
+      .populate('offeredItems', 'title category images valueEstimate condition')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    return { swaps, total };
+  }
+
+  async toggleUserStatus(targetUserId: string) {
+    const user = await userRepository.findById(targetUserId);
+    if (!user) {
+      throw ApiError.notFound('User not found.');
+    }
+    user.isActive = !user.isActive;
+    await user.save();
+    return user;
+  }
+
+  async deleteUserByAdmin(userId: string) {
+    const user = await userRepository.findById(userId);
+    if (!user) {
+      throw ApiError.notFound('User not found.');
+    }
+    await User.findByIdAndDelete(userId);
+    return { success: true, id: userId };
+  }
+
+  async deleteItemByAdmin(itemId: string) {
+    const item = await itemRepository.findById(itemId);
+    if (!item) {
+      throw ApiError.notFound('Item not found.');
+    }
+    await Item.findByIdAndDelete(itemId);
+    return { success: true, id: itemId };
+  }
 }
 
 export const adminService = new AdminService();

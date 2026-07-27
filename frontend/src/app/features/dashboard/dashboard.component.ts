@@ -4,239 +4,363 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ItemService } from '../../core/services/item.service';
 import { SwapService } from '../../core/services/swap.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { Item } from '../../core/models/item.model';
 import { SwapRequest } from '../../core/models/swap.model';
+import { ImageFallbackDirective } from '../../shared/directives/image-fallback.directive';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ImageFallbackDirective],
   template: `
-    <div class="flex min-h-[calc(100vh-8rem)] rounded-4xl overflow-hidden bg-slate-900/90 text-white border border-slate-800 shadow-2xl relative">
-      
-      <!-- Collapsible Apple HIG Sidebar -->
-      <aside
-        [class]="sidebarCollapsed() ? 'w-20' : 'w-64'"
-        class="bg-slate-950/80 border-r border-slate-800/80 p-4 flex flex-col justify-between transition-all duration-300 relative z-20"
-      >
-        <div class="space-y-6">
-          <!-- Sidebar Header & Collapse Toggle -->
-          <div class="flex items-center justify-between px-2">
-            @if (!sidebarCollapsed()) {
-              <div class="flex items-center space-x-2">
-                <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
-                <h3 class="text-sm font-extrabold text-white tracking-wider uppercase">ReWear Pro</h3>
-              </div>
-            }
-            <button
-              (click)="sidebarCollapsed.set(!sidebarCollapsed())"
-              class="p-2 rounded-xl bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors mx-auto"
-            >
-              {{ sidebarCollapsed() ? '⏩' : '⏪' }}
-            </button>
-          </div>
-
-          <!-- Navigation Links -->
-          <nav class="space-y-1.5">
-            @for (link of navLinks; track link.route) {
-              <a
-                [routerLink]="link.route"
-                routerLinkActive="bg-emerald-500/20 text-emerald-400 border-l-4 border-emerald-500"
-                class="flex items-center space-x-3 px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all"
-              >
-                <span class="text-base">{{ link.icon }}</span>
-                @if (!sidebarCollapsed()) {
-                  <span>{{ link.label }}</span>
-                }
-              </a>
-            }
-          </nav>
-        </div>
-
-        <!-- Sidebar Bottom User Karma Card -->
-        <div class="p-3 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
-          <div class="flex items-center space-x-3">
-            <img [src]="user()?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200'" class="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-500/40 shrink-0" />
-            @if (!sidebarCollapsed()) {
-              <div class="truncate">
-                <p class="text-xs font-bold text-white truncate">{{ user()?.name }}</p>
-                <span class="text-[10px] text-emerald-400 font-bold">★ 4.9 Karma Tier</span>
-              </div>
-            }
-          </div>
-        </div>
-      </aside>
-
-      <!-- Main Dashboard Workspace Content -->
-      <main class="flex-1 p-6 sm:p-8 space-y-8 overflow-y-auto max-h-[calc(100vh-8rem)] scrollbar-none">
+    <div class="min-h-screen bg-[#faf8f5] dark:bg-slate-950 text-slate-900 dark:text-slate-100 py-8 px-4 sm:px-6 md:px-12 pb-24">
+      <div class="max-w-6xl mx-auto space-y-8">
         
-        <!-- Welcome Banner with Personalized Greeting -->
-        <div class="p-8 rounded-3xl bg-gradient-to-r from-emerald-900/50 via-teal-900/40 to-slate-900 border border-emerald-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl">
-          <div class="space-y-1">
-            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-extrabold uppercase tracking-wider">
-              SaaS Swapper Hub
-            </span>
-            <h1 class="text-3xl font-black text-white tracking-tight">Welcome back, {{ user()?.name || 'Aarav' }}! 👋</h1>
-            <p class="text-xs text-slate-300">You have <span class="text-emerald-400 font-bold">2 active trade offers</span> and 3 unread messages waiting in Bangalore.</p>
+        <!-- Welcome Greeting & Overview KPI Metrics Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Welcome back, {{ userName() }} 👋
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+              Your wardrobe is making a difference today.
+            </p>
           </div>
 
-          <div class="flex items-center space-x-3">
-            <a routerLink="/items/create" class="px-6 py-3 rounded-full btn-primary text-xs shadow-lg">
-              + Post New Garment
-            </a>
-          </div>
-        </div>
-
-        <!-- Quick Stats KPI Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <a routerLink="/items" class="p-5 rounded-3xl bg-slate-800/60 border border-slate-700/60 space-y-2 block hover:border-emerald-500/80 transition-all cursor-pointer">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Listed Garments</span>
-            <h3 class="text-3xl font-black text-white">{{ myListings().length || 4 }}</h3>
-            <p class="text-[11px] text-emerald-400 font-medium">In active circulation ➔</p>
-          </a>
-
-          <a routerLink="/swaps" class="p-5 rounded-3xl bg-slate-800/60 border border-slate-700/60 space-y-2 block hover:border-amber-500/80 transition-all cursor-pointer">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Active Trade Pipeline</span>
-            <h3 class="text-3xl font-black text-amber-400">{{ activeSwaps().length || 2 }}</h3>
-            <p class="text-[11px] text-amber-300 font-medium">Proposals pending & accepted ➔</p>
-          </a>
-
-          <a routerLink="/chat" class="p-5 rounded-3xl bg-slate-800/60 border border-slate-700/60 space-y-2 block hover:border-cyan-500/80 transition-all cursor-pointer">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Unread Messages</span>
-            <h3 class="text-3xl font-black text-cyan-400">{{ unreadMessagesCount() }}</h3>
-            <p class="text-[11px] text-cyan-300 font-medium">Direct chats with swappers ➔</p>
-          </a>
-
-          <a routerLink="/sustainability" class="p-5 rounded-3xl bg-emerald-950/60 border border-emerald-500/40 space-y-2 block hover:border-emerald-400 transition-all cursor-pointer">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Total Eco CO2 Saved</span>
-            <h3 class="text-3xl font-black text-emerald-300">14.2 kg</h3>
-            <p class="text-[11px] text-emerald-400 font-medium">Textile waste prevented ➔</p>
-          </a>
-        </div>
-
-        <!-- Weekly Activity Performance Chart Card -->
-        <div class="p-6 rounded-3xl bg-slate-800/60 border border-slate-700/80 space-y-4">
-          <div class="flex items-center justify-between">
+          <!-- 4-Column Stats Pill Grid -->
+          <div class="flex items-center space-x-6 sm:space-x-8 text-center overflow-x-auto pb-2 scrollbar-none">
             <div>
-              <h3 class="text-base font-bold text-white">Weekly Swap Activity & Profile Views</h3>
-              <p class="text-xs text-slate-400">Total views and swap proposal interactions over the last 7 days</p>
+              <span class="block text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                {{ myListings().length || 12 }}
+              </span>
+              <span class="block text-[9px] font-extrabold uppercase tracking-wider text-slate-400 mt-0.5 whitespace-nowrap">
+                ACTIVE LISTINGS
+              </span>
             </div>
-            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold">+28% Growth</span>
-          </div>
 
-          <div class="h-44 w-full flex items-end justify-between space-x-2 pt-4 px-2">
-            @for (bar of weeklyActivityData; track bar.day) {
-              <div class="flex-1 flex flex-col items-center space-y-2 group">
-                <div class="w-full bg-slate-900/80 rounded-t-xl h-32 flex items-end p-1">
-                  <div
-                    [style.height.%]="bar.height"
-                    class="w-full bg-gradient-to-t from-emerald-600 to-teal-400 rounded-t-lg group-hover:from-emerald-500 group-hover:to-teal-300 transition-all"
-                  ></div>
-                </div>
-                <span class="text-[10px] font-bold text-slate-400">{{ bar.day }}</span>
-              </div>
-            }
-          </div>
-        </div>
-
-        <!-- Profile Completion Progress Meter Card -->
-        <div class="p-6 rounded-3xl bg-slate-800/60 border border-slate-700/80 space-y-4">
-          <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-base font-bold text-white">Closet Profile Completion</h3>
-              <p class="text-xs text-slate-400">Complete your profile details to boost trade proposal response rates</p>
+              <span class="block text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                {{ pendingRequestsCount() }}
+              </span>
+              <span class="block text-[9px] font-extrabold uppercase tracking-wider text-slate-400 mt-0.5 whitespace-nowrap">
+                SWAP REQUESTS
+              </span>
             </div>
-            <span class="text-xl font-black text-emerald-400">{{ profileCompletion() }}%</span>
-          </div>
 
-          <div class="w-full h-3 bg-slate-900 rounded-full overflow-hidden border border-slate-700">
-            <div
-              class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500"
-              [style.width.%]="profileCompletion()"
-            ></div>
+            <div>
+              <span class="block text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                {{ completedSwapsCount() }}
+              </span>
+              <span class="block text-[9px] font-extrabold uppercase tracking-wider text-slate-400 mt-0.5 whitespace-nowrap">
+                COMPLETED SWAPS
+              </span>
+            </div>
+
+            <div>
+              <span class="block text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                {{ itemsSavedCount() }}
+              </span>
+              <span class="block text-[9px] font-extrabold uppercase tracking-wider text-slate-400 mt-0.5 whitespace-nowrap">
+                ITEMS SAVED
+              </span>
+            </div>
           </div>
         </div>
 
-        <!-- Active Swap Proposals & Action Center -->
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h3 class="text-lg font-bold text-white">Pending & Active Swap Offers</h3>
-            <a routerLink="/swaps" class="text-xs font-bold text-emerald-400 hover:underline">View All Trade Center ➔</a>
+        <!-- Dashboard Body Layout (2 Columns Grid on Web, Stacked on Mobile/Tablet) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- LEFT COLUMN (lg:col-span-8) -->
+          <div class="lg:col-span-8 space-y-8">
+            
+            <!-- Green Impact Banner Card -->
+            <div class="bg-[#2d5c2b] dark:bg-[#1e3e1d] rounded-[32px] p-6 sm:p-8 text-white relative shadow-md overflow-hidden">
+              <h2 class="text-2xl font-extrabold tracking-tight mb-6">
+                Your ReWear Impact
+              </h2>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+                
+                <!-- Left 2x2 Stats Matrix Grid -->
+                <div class="grid grid-cols-2 gap-y-6 gap-x-4">
+                  <div>
+                    <span class="block text-2xl sm:text-3xl font-black">
+                      18
+                    </span>
+                    <span class="block text-[9px] font-extrabold uppercase tracking-wider text-emerald-200 mt-0.5">
+                      CLOTHES REUSED
+                    </span>
+                  </div>
+
+                  <div>
+                    <span class="block text-2xl sm:text-3xl font-black">
+                      12
+                    </span>
+                    <span class="block text-[9px] font-extrabold uppercase tracking-wider text-emerald-200 mt-0.5">
+                      SUCCESSFUL SWAPS
+                    </span>
+                  </div>
+
+                  <div>
+                    <span class="block text-2xl sm:text-3xl font-black">
+                      34kg
+                    </span>
+                    <span class="block text-[9px] font-extrabold uppercase tracking-wider text-emerald-200 mt-0.5">
+                      TEXTILE WASTE AVOIDED
+                    </span>
+                  </div>
+
+                  <div>
+                    <span class="block text-2xl sm:text-3xl font-black">
+                      28kg
+                    </span>
+                    <span class="block text-[9px] font-extrabold uppercase tracking-wider text-emerald-200 mt-0.5">
+                      CO₂ SAVED
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Right Circular Gauge & Share Button -->
+                <div class="flex flex-col items-center justify-center space-y-4 pt-4 sm:pt-0 border-t sm:border-t-0 border-white/20">
+                  <div class="w-28 h-28 rounded-full border-[6px] border-white/20 border-t-white border-r-white flex flex-col items-center justify-center text-center p-2 relative shadow-inner">
+                    <span class="text-xl font-black block leading-none">75%</span>
+                    <span class="text-[8px] font-extrabold uppercase tracking-wider text-white/80 block mt-1">
+                      TO NEXT BADGE
+                    </span>
+                  </div>
+
+                  <button
+                    (click)="shareImpact()"
+                    class="bg-white hover:bg-slate-100 text-slate-900 font-extrabold px-6 py-2.5 rounded-full text-xs shadow-md transition-all cursor-pointer"
+                  >
+                    Share Impact
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Recent Requests Section -->
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                  Recent Requests
+                </h3>
+
+                <div class="flex items-center space-x-1">
+                  <span class="px-4 py-1.5 rounded-full bg-[#f4f3ed] dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold shadow-sm">
+                    Incoming
+                  </span>
+                  <span class="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 ml-3 cursor-pointer">
+                    Outgoing
+                  </span>
+                </div>
+              </div>
+
+              <!-- Request Item Card -->
+              <div class="bg-white dark:bg-slate-900 rounded-[28px] p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                
+                <div class="flex items-center space-x-3">
+                  <!-- Trade Item Thumbnails -->
+                  <div class="flex items-center space-x-2 shrink-0">
+                    <div class="w-14 h-14 rounded-2xl bg-[#f4f2ea] dark:bg-slate-800 p-1 relative shadow-sm overflow-hidden flex items-center justify-center">
+                      <img
+                        src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=200"
+                        appImageFallback
+                        class="w-full h-full object-cover rounded-xl"
+                      />
+                      <span class="absolute bottom-0 right-0 px-1 text-[8px] font-black uppercase bg-slate-900/80 text-white rounded-tl-md">
+                        YOU
+                      </span>
+                    </div>
+
+                    <span class="text-slate-400 text-xs font-bold">🔁</span>
+
+                    <div class="w-14 h-14 rounded-2xl bg-[#f4f2ea] dark:bg-slate-800 p-1 relative shadow-sm overflow-hidden flex items-center justify-center">
+                      <img
+                        src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80&w=200"
+                        appImageFallback
+                        class="w-full h-full object-cover rounded-xl"
+                      />
+                      <span class="absolute bottom-0 right-0 px-1 text-[8px] font-black uppercase bg-[#2d5c2b] text-white rounded-tl-md">
+                        THEM
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Details -->
+                  <div>
+                    <div class="flex items-center">
+                      <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                        Sarah wants to swap
+                      </h4>
+                      <span class="px-2.5 py-0.5 rounded text-[10px] uppercase font-extrabold bg-blue-500/10 text-blue-600 dark:text-blue-400 ml-2">
+                        NEGOTIATING
+                      </span>
+                    </div>
+                    <p class="text-xs text-slate-400 font-medium mt-0.5">
+                      Request received Oct 12 · London, 2.4km
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Right Action Buttons -->
+                <div class="flex items-center space-x-3 w-full sm:w-auto justify-end">
+                  <a
+                    routerLink="/chat"
+                    class="bg-[#f4f3ed] dark:bg-slate-800 hover:bg-[#e8e6df] text-slate-900 dark:text-white font-extrabold px-5 py-2.5 rounded-2xl text-xs transition-colors cursor-pointer text-center"
+                  >
+                    Message
+                  </a>
+                  <button
+                    (click)="acceptRequest()"
+                    class="bg-[#2d5c2b] hover:bg-[#234821] text-white font-extrabold px-6 py-2.5 rounded-2xl text-xs shadow-md transition-all cursor-pointer"
+                  >
+                    Accept
+                  </button>
+                </div>
+
+              </div>
+
+              <!-- View All Requests Button -->
+              <a
+                routerLink="/swaps"
+                class="border-2 border-dashed border-slate-300 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-extrabold py-3.5 px-6 rounded-full w-full text-center text-xs hover:bg-white dark:hover:bg-slate-900 transition-all cursor-pointer block mt-4"
+              >
+                View all requests
+              </a>
+
+            </div>
+
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-5 rounded-3xl bg-slate-800/70 border border-slate-700 space-y-3">
-              <div class="flex items-center justify-between border-b border-slate-700 pb-2">
-                <span class="text-xs font-bold text-slate-300">Offer ID: #849201</span>
-                <span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  ACCEPTED
-                </span>
-              </div>
+          <!-- RIGHT COLUMN (lg:col-span-4) -->
+          <div class="lg:col-span-4 space-y-8">
+            
+            <!-- Recent Messages Section -->
+            <div class="space-y-4">
+              <h3 class="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
+                Recent Messages
+              </h3>
 
-              <div class="flex items-center justify-between text-xs">
-                <div>
-                  <span class="text-[10px] uppercase text-slate-400 block font-bold">You Get</span>
-                  <span class="font-bold text-emerald-400">Nike Sports Hoodie</span>
-                </div>
-                <div class="text-right">
-                  <span class="text-[10px] uppercase text-slate-400 block font-bold">You Give</span>
-                  <span class="font-bold text-white">Levi's 501 Jeans</span>
-                </div>
-              </div>
+              <div class="bg-white dark:bg-slate-900 rounded-[28px] border border-slate-200/80 dark:border-slate-800 shadow-sm divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden">
+                <a
+                  routerLink="/chat"
+                  class="p-4 flex items-center space-x-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer block"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
+                    appImageFallback
+                    class="w-10 h-10 rounded-full object-cover shrink-0"
+                  />
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <h4 class="text-xs font-bold text-slate-900 dark:text-white truncate">
+                        Sarah Williams
+                      </h4>
+                      <span class="text-[11px] font-semibold text-slate-400">2M</span>
+                    </div>
+                    <p class="text-xs text-slate-500 font-medium truncate mt-0.5">
+                      Does the jacket have any marks?
+                    </p>
+                  </div>
+                </a>
 
-              <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-700/60">
-                <a routerLink="/chat" class="px-3.5 py-1.5 rounded-full bg-slate-700 text-xs font-bold text-slate-200 hover:bg-slate-600 transition-colors">
-                  💬 Message Rohan
+                <a
+                  routerLink="/chat"
+                  class="p-4 flex items-center space-x-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer block"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
+                    appImageFallback
+                    class="w-10 h-10 rounded-full object-cover shrink-0"
+                  />
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <h4 class="text-xs font-bold text-slate-900 dark:text-white truncate">
+                        Marcus Chen
+                      </h4>
+                      <span class="text-[11px] font-semibold text-slate-400">1H</span>
+                    </div>
+                    <p class="text-xs text-slate-500 font-medium truncate mt-0.5">
+                      I can meet tomorrow at Central Park.
+                    </p>
+                  </div>
                 </a>
               </div>
             </div>
 
-            <div class="p-5 rounded-3xl bg-slate-800/70 border border-slate-700 space-y-3">
-              <div class="flex items-center justify-between border-b border-slate-700 pb-2">
-                <span class="text-xs font-bold text-slate-300">Offer ID: #910283</span>
-                <span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                  PENDING OFFER
-                </span>
+            <!-- Recommended Nearby Section -->
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
+                  Recommended Nearby
+                </h3>
+
+                <a routerLink="/items" class="text-xs font-bold text-[#2d5c2b] dark:text-emerald-400 hover:underline cursor-pointer">
+                  See all
+                </a>
               </div>
 
-              <div class="flex items-center justify-between text-xs">
-                <div>
-                  <span class="text-[10px] uppercase text-slate-400 block font-bold">You Get</span>
-                  <span class="font-bold text-emerald-400">Zara Linen Shirt</span>
-                </div>
-                <div class="text-right">
-                  <span class="text-[10px] uppercase text-slate-400 block font-bold">You Give</span>
-                  <span class="font-bold text-white">Puma Sweatshirt</span>
-                </div>
-              </div>
+              <div class="space-y-3">
+                <a
+                  [routerLink]="['/items', 'demo-rec-1']"
+                  class="flex items-center space-x-4 cursor-pointer group"
+                >
+                  <div class="w-16 h-16 rounded-2xl bg-[#f4f2ea] dark:bg-slate-800 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
+                    <img
+                      src="https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=200"
+                      appImageFallback
+                      class="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform"
+                    />
+                  </div>
 
-              <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-700/60">
-                <a routerLink="/chat" class="px-3.5 py-1.5 rounded-full bg-slate-700 text-xs font-bold text-slate-200 hover:bg-slate-600 transition-colors">
-                  💬 Message Ananya
+                  <div class="space-y-0.5">
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                      Burberry Trench
+                    </h4>
+                    <p class="text-[11px] text-slate-500 font-medium">
+                      Pristine · 1.2km away
+                    </p>
+                    <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-black text-[10px] tracking-wider inline-block mt-1">
+                      £180 EST.
+                    </span>
+                  </div>
+                </a>
+
+                <a
+                  [routerLink]="['/items', 'demo-rec-2']"
+                  class="flex items-center space-x-4 cursor-pointer group"
+                >
+                  <div class="w-16 h-16 rounded-2xl bg-[#f4f2ea] dark:bg-slate-800 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
+                    <img
+                      src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&q=80&w=200"
+                      appImageFallback
+                      class="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform"
+                    />
+                  </div>
+
+                  <div class="space-y-0.5">
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                      Wool Knit Sweater
+                    </h4>
+                    <p class="text-[11px] text-slate-500 font-medium">
+                      Excellent · 0.8km away
+                    </p>
+                    <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-black text-[10px] tracking-wider inline-block mt-1">
+                      £42 EST.
+                    </span>
+                  </div>
                 </a>
               </div>
             </div>
+
           </div>
+
         </div>
 
-        <!-- Activity Feed Chronological Timeline -->
-        <div class="p-6 rounded-3xl bg-slate-800/60 border border-slate-700/80 space-y-4">
-          <h3 class="text-lg font-bold text-white">Recent Activity Stream</h3>
-          <div class="space-y-3">
-            @for (act of activityFeed(); track act.id) {
-              <div class="flex items-center space-x-3 text-xs p-3 rounded-2xl bg-slate-900/60 border border-slate-800">
-                <span class="text-lg">{{ act.icon }}</span>
-                <div class="flex-1">
-                  <p class="text-slate-200 font-bold">{{ act.title }}</p>
-                  <span class="text-[10px] text-slate-400">{{ act.time }}</span>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-
-      </main>
-
+      </div>
     </div>
   `,
 })
@@ -244,48 +368,25 @@ export class DashboardComponent implements OnInit {
   authService = inject(AuthService);
   private itemService = inject(ItemService);
   private swapService = inject(SwapService);
+  private notification = inject(NotificationService);
 
-  sidebarCollapsed = signal<boolean>(false);
   user = computed(() => this.authService.currentUser());
+  userName = computed(() => this.user()?.name?.split(' ')?.[0] || 'Alex');
 
   activeSwaps = signal<SwapRequest[]>([]);
   myListings = signal<Item[]>([]);
-  suggestedSwaps = signal<Item[]>([]);
-  unreadMessagesCount = signal<number>(3);
 
-  navLinks = [
-    { label: 'Overview', route: '/dashboard', icon: '📊' },
-    { label: 'Marketplace Feed', route: '/items', icon: '🛍️' },
-    { label: 'Trade Center', route: '/swaps', icon: '🔄' },
-    { label: 'Direct Messages', route: '/chat', icon: '💬' },
-    { label: 'My Closet Profile', route: '/profile', icon: '👔' },
-    { label: 'Account Settings', route: '/profile/settings', icon: '⚙️' },
-  ];
-
-  weeklyActivityData = [
-    { day: 'Mon', height: 45 },
-    { day: 'Tue', height: 60 },
-    { day: 'Wed', height: 80 },
-    { day: 'Thu', height: 55 },
-    { day: 'Fri', height: 95 },
-    { day: 'Sat', height: 70 },
-    { day: 'Sun', height: 85 },
-  ];
-
-  profileCompletion = computed(() => {
-    const u = this.user();
-    if (!u) return 75;
-    let score = 50;
-    if (u.avatarUrl) score += 25;
-    if (u.bio) score += 25;
-    return score;
+  pendingRequestsCount = computed(() => {
+    const count = this.activeSwaps().filter((s) => s.status === 'PENDING').length;
+    return count || 4;
   });
 
-  activityFeed = signal([
-    { id: 1, title: 'Received new 1:1 trade offer on Nike Sports Hoodie from Rohan G.', time: '10 minutes ago', icon: '📥' },
-    { id: 2, title: 'Swap #849201 marked Shipped via BlueDart express', time: '2 hours ago', icon: '📦' },
-    { id: 3, title: 'Earned 5-Star Karma Review from Ananya K. in Noida', time: '1 day ago', icon: '⭐' },
-  ]);
+  completedSwapsCount = computed(() => {
+    const count = this.activeSwaps().filter((s) => s.status === 'COMPLETED').length;
+    return count || 18;
+  });
+
+  itemsSavedCount = computed(() => 32);
 
   ngOnInit() {
     this.fetchData();
@@ -306,11 +407,13 @@ export class DashboardComponent implements OnInit {
         if (res.data) this.activeSwaps.set(res.data);
       },
     });
+  }
 
-    this.itemService.getItems({ limit: 3 }).subscribe({
-      next: (res) => {
-        if (res.data) this.suggestedSwaps.set(res.data);
-      },
-    });
+  shareImpact(): void {
+    this.notification.success('Impact Shared!', 'Your ReWear eco impact report link was copied to clipboard.');
+  }
+
+  acceptRequest(): void {
+    this.notification.success('Swap Offer Accepted!', 'You have accepted the trade proposal from Sarah.');
   }
 }
