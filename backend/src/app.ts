@@ -172,7 +172,7 @@ app.get('/favicon.ico', (_req: Request, res: Response) => {
 app.get('/', (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
-    message: 'ReWear API is running 🚀',
+    message: 'ReWear API is running',
   });
 });
 
