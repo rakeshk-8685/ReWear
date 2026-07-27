@@ -25,6 +25,18 @@ export class AuthService {
     return rememberMe ? localStorage : sessionStorage;
   }
 
+  private isTokenExpired(token: string): boolean {
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return true;
+      const payload = JSON.parse(atob(parts[1]));
+      if (!payload.exp) return false;
+      return payload.exp * 1000 < Date.now();
+    } catch {
+      return true;
+    }
+  }
+
   private getStoredUser(): User | null {
     const raw = localStorage.getItem('user_data') || sessionStorage.getItem('user_data');
     if (!raw) return null;
@@ -36,7 +48,14 @@ export class AuthService {
   }
 
   private getStoredToken(): string | null {
-    return localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+    const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+    if (!token) return null;
+    if (this.isTokenExpired(token)) {
+      localStorage.removeItem('access_token');
+      sessionStorage.removeItem('access_token');
+      return null;
+    }
+    return token;
   }
 
   register(data: any): Observable<ApiResponse<{ user: User; accessToken: string }>> {
