@@ -111,6 +111,7 @@ const globalLimiter = rateLimit({
   message: { success: false, message: 'Too many requests from this IP, please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
   skip: (req: Request) => req.method === 'OPTIONS',
 });
 app.use('/api', globalLimiter);
@@ -120,6 +121,7 @@ const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5000,
   message: { success: false, message: 'Too many authentication attempts. Please try again later.' },
+  validate: { xForwardedForHeader: false },
   skip: (req: Request) => req.method === 'OPTIONS',
 });
 app.use('/api/auth/login', authLimiter);
