@@ -73,7 +73,7 @@ import { QuickPreviewService } from '../../../core/services/quick-preview.servic
               Size: {{ item?.size || 'M' }}
             </span>
             <span class="px-2.5 py-0.5 text-xs font-semibold rounded-lg bg-slate-900/70 text-slate-200 backdrop-blur-sm">
-              Est. ~&#36;{{ item?.valueEstimate || 50 }}
+              Est. ~₹{{ item?.valueEstimate || 50 }}
             </span>
           </div>
           @if (item?.location) {

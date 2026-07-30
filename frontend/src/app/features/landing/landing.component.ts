@@ -93,7 +93,7 @@ import { RatingStarsComponent } from '../../shared/components/rating-stars/ratin
                   Like New
                 </span>
                 <span class="absolute bottom-3 left-3 px-3 py-1 rounded-full bg-emerald-500 text-white font-bold text-xs shadow-md">
-                  Size: L • Est. ~$140 • Bangalore
+                  Size: L • Est. ~₹1,400 • Bangalore
                 </span>
               </div>
 
@@ -122,7 +122,7 @@ import { RatingStarsComponent } from '../../shared/components/rating-stars/ratin
           <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Garments Swapped</p>
         </div>
         <div class="glass-card p-6 rounded-3xl text-center space-y-1 border border-slate-200 dark:border-slate-800">
-          <h3 class="text-3xl sm:text-4xl font-black text-emerald-500">$0</h3>
+          <h3 class="text-3xl sm:text-4xl font-black text-emerald-500">₹0</h3>
           <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Peer Cash Transactions</p>
         </div>
         <div class="glass-card p-6 rounded-3xl text-center space-y-1 border border-slate-200 dark:border-slate-800">

@@ -208,7 +208,7 @@ import { Item } from '../../../core/models/item.model';
 
             <div>
               <div class="flex items-center justify-between mb-1">
-                <label for="itemValueEstimate" class="block text-xs font-bold uppercase tracking-wider text-slate-400">Est. Swap Value ($)</label>
+                <label for="itemValueEstimate" class="block text-xs font-bold uppercase tracking-wider text-slate-400">Est. Swap Value (₹)</label>
                 <button type="button" (click)="calculateAutoValue()" class="text-[10px] font-bold text-emerald-500 hover:underline">
                   ✨ Auto-Calculate
                 </button>

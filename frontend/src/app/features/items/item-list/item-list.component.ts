@@ -157,7 +157,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
                     <div class="truncate">
                       <span class="text-[10px] font-bold text-emerald-400 uppercase">📍 {{ item?.location || 'Bangalore' }}</span>
                       <h4 class="text-xs font-bold text-white truncate group-hover:text-emerald-400 transition-colors">{{ item?.title || 'Clothing Item' }}</h4>
-                      <p class="text-[10px] text-slate-400 font-medium">Est. ~&#36;{{ item?.valueEstimate || 0 }} • {{ item?.condition || 'Like New' }}</p>
+                      <p class="text-[10px] text-slate-400 font-medium">Est. ~₹{{ item?.valueEstimate || 0 }} • {{ item?.condition || 'Like New' }}</p>
                     </div>
                   </div>
                 </div>
@@ -336,7 +336,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
                     </div>
                     <div>
                       <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Estimated Swap Value</p>
-                      <p class="text-2xl font-black text-slate-900 dark:text-white">&#36;{{ previewItem()?.valueEstimate || 0 }}</p>
+                      <p class="text-2xl font-black text-slate-900 dark:text-white">₹{{ previewItem()?.valueEstimate || 0 }}</p>
                     </div>
                   </div>
 

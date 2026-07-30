@@ -389,7 +389,7 @@ export interface SwapDispute {
                     <td class="p-4 text-slate-500 font-semibold">{{ item.category }}</td>
                     <td class="p-4 font-bold">{{ item.brand || 'Generic' }}</td>
                     <td class="p-4 text-slate-500">{{ item.condition }}</td>
-                    <td class="p-4 font-extrabold text-emerald-600 dark:text-emerald-400">\${{ item.valueEstimate || 75 }}</td>
+                    <td class="p-4 font-extrabold text-emerald-600 dark:text-emerald-400">₹{{ item.valueEstimate || 75 }}</td>
                     <td class="p-4">
                       <span [class]="item.status === 'AVAILABLE' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold">
                         {{ item.status }}

@@ -107,7 +107,7 @@ import { ImageFallbackDirective } from '../../../shared/directives/image-fallbac
                     ESTIMATED SWAP VALUE
                   </span>
                   <span class="text-2xl font-black text-slate-900 dark:text-white block mt-0.5">
-                    £{{ (item()?.valueEstimate || 45).toFixed(2) }}
+                    ₹{{ item()?.valueEstimate || 45 }}
                   </span>
                 </div>
 
@@ -321,7 +321,7 @@ import { ImageFallbackDirective } from '../../../shared/directives/image-fallbac
                         {{ rel.title }}
                       </h4>
                       <span class="text-xs font-black text-slate-900 dark:text-white shrink-0">
-                        £{{ rel.valueEstimate }}
+                        ₹{{ rel.valueEstimate }}
                       </span>
                     </div>
                     <p class="text-[11px] text-slate-500 font-medium">
@@ -342,7 +342,7 @@ import { ImageFallbackDirective } from '../../../shared/directives/image-fallbac
           <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl shadow-2xl border border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
             <div>
               <span class="text-[10px] font-extrabold uppercase text-slate-400 block">Estimated Value</span>
-              <span class="text-base font-black text-slate-900 dark:text-white block">£{{ item()?.valueEstimate }}</span>
+              <span class="text-base font-black text-slate-900 dark:text-white block">₹{{ item()?.valueEstimate }}</span>
             </div>
 
             <a

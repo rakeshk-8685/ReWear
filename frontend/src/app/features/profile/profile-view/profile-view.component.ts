@@ -359,7 +359,7 @@ export class ProfileViewComponent implements OnInit {
   }
 
   formatCurrency(val: number): string {
-    return `£${val}`;
+    return `₹${val}`;
   }
 
   toggleFavorite(event: Event, item: Item): void {

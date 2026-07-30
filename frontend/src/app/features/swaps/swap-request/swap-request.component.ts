@@ -504,7 +504,7 @@ export class SwapRequestComponent implements OnInit {
   }
 
   formatCurrency(val: number): string {
-    return `£${val.toFixed(2)}`;
+    return `₹${val}`;
   }
 
   sendSwapRequest(): void {

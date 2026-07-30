@@ -137,7 +137,7 @@ import { DEFAULT_ITEM_IMAGE, DEFAULT_USER_AVATAR } from '../../../core/services/
                   </div>
                   <div>
                     <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Estimated Swap Value</p>
-                    <p class="text-2xl font-black text-slate-900 dark:text-white">&#36;{{ item?.valueEstimate || 50 }}</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">₹{{ item?.valueEstimate || 50 }}</p>
                   </div>
                 </div>
 

@@ -123,7 +123,7 @@ import { NotificationService } from '../../../core/services/notification.service
             <img [src]="swap?.requestedItem?.images?.[0] || defaultItemImage" class="w-16 h-16 rounded-xl object-cover ring-2 ring-emerald-500/40 shrink-0" />
             <div class="truncate">
               <h4 class="text-sm font-bold text-slate-900 dark:text-white truncate">{{ swap?.requestedItem?.title || 'Target Item' }}</h4>
-              <p class="text-xs text-emerald-500 font-bold">~&#36;{{ swap?.requestedItem?.valueEstimate || 0 }}</p>
+              <p class="text-xs text-emerald-500 font-bold">~₹{{ swap?.requestedItem?.valueEstimate || 0 }}</p>
               <p class="text-[10px] text-slate-400">Size: {{ swap?.requestedItem?.size || 'M' }} • {{ swap?.requestedItem?.condition || 'Like New' }}</p>
             </div>
           </div>

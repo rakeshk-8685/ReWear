@@ -140,7 +140,7 @@ import { ImageFallbackDirective } from '../../../shared/directives/image-fallbac
                   Classic Trench Coat
                 </h4>
                 <p class="text-xs text-slate-500 font-medium">
-                  Burberry · Size L · £180 Est.
+                  Burberry · Size L · ₹1,800 Est.
                 </p>
                 <span class="px-2 py-0.5 rounded text-[9px] font-extrabold uppercase bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 inline-block mt-1">
                   MEET LOCALLY
@@ -166,7 +166,7 @@ import { ImageFallbackDirective } from '../../../shared/directives/image-fallbac
                   Wool Knit Sweater
                 </h4>
                 <p class="text-xs text-slate-500 font-medium">
-                  COS · Size L · £42 Est.
+                  COS · Size L · ₹420 Est.
                 </p>
                 <span class="px-2 py-0.5 rounded text-[9px] font-extrabold uppercase bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 inline-block mt-1">
                   MEET LOCALLY

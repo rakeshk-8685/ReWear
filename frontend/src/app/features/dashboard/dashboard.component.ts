@@ -324,7 +324,7 @@ import { ImageFallbackDirective } from '../../shared/directives/image-fallback.d
                       Pristine · 1.2km away
                     </p>
                     <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-black text-[10px] tracking-wider inline-block mt-1">
-                      £180 EST.
+                      ₹1,800 EST.
                     </span>
                   </div>
                 </a>
@@ -349,7 +349,7 @@ import { ImageFallbackDirective } from '../../shared/directives/image-fallback.d
                       Excellent · 0.8km away
                     </p>
                     <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-black text-[10px] tracking-wider inline-block mt-1">
-                      £42 EST.
+                      ₹420 EST.
                     </span>
                   </div>
                 </a>
